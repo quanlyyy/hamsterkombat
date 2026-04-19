@@ -1,0 +1,86 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:Ekz.ViewModels"
+        x:Class="Ekz.Views.MainWindow"
+        Title="Управление товарами и заказами"
+        Width="900" Height="700">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <TabControl Grid.Row="0" Margin="10,10,10,0">
+            <!-- Товары -->
+            <TabItem Header="Товары">
+                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Spacing="10">
+                        <Button Command="{Binding AddProductCommand}">Добавить</Button>
+                        <Button Command="{Binding DeleteProductCommand}">Удалить</Button>
+                        <Button Command="{Binding SaveProductsCommand}">Сохранить товары</Button>
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="2" Margin="10">
+                        <ItemsControl ItemsSource="{Binding Products}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Padding="5">
+                                        <Grid ColumnDefinitions="50,2*,*,*,Auto">
+                                            <TextBlock Grid.Column="0" Text="{Binding Id}" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding Name}" Margin="5,0"/>
+                                            <TextBox Grid.Column="2" Text="{Binding Price}" Margin="5,0"/>
+                                            <TextBox Grid.Column="3" Text="{Binding Quantity}" Margin="5,0"/>
+                                            <Button Grid.Column="4" Content="Выбрать" 
+                                                    Command="{Binding $parent[ItemsControl].DataContext.SelectProductCommand}"
+                                                    CommandParameter="{Binding}" Margin="5,0"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <TextBlock Grid.Row="3" Text="{Binding StatusMessage}" Margin="10,5" Foreground="Gray"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Заказы -->
+            <TabItem Header="Заказы">
+                <Grid RowDefinitions="Auto,Auto,*,Auto">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Spacing="10">
+                        <Button Command="{Binding AddZakazCommand}">Добавить заказ</Button>
+                        <Button Command="{Binding DeleteZakazCommand}">Удалить заказ</Button>
+                        <Button Command="{Binding SaveZakazCommand}">Сохранить заказы</Button>
+                    </StackPanel>
+
+                    <ScrollViewer Grid.Row="2" Margin="10">
+                        <ItemsControl ItemsSource="{Binding ZakazList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Padding="5">
+                                        <Grid ColumnDefinitions="80,80,100,100,*,Auto">
+                                            <TextBlock Grid.Column="0" Text="{Binding IdZakaza}" VerticalAlignment="Center"/>
+                                            <TextBox Grid.Column="1" Text="{Binding KlId}" Margin="5,0"/>
+                                            <TextBox Grid.Column="2" Text="{Binding Summa}" Margin="5,0"/>
+                                            <TextBox Grid.Column="3" Text="{Binding PrId}" Margin="5,0"/>
+                                            <TextBlock Grid.Column="4" Text="{Binding ProductName}" VerticalAlignment="Center" Margin="5,0"/>
+                                            <Button Grid.Column="5" Content="Выбрать" 
+                                                    Command="{Binding $parent[ItemsControl].DataContext.SelectZakazCommand}"
+                                                    CommandParameter="{Binding}" Margin="5,0"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <TextBlock Grid.Row="3" Text="{Binding StatusMessage}" Margin="10,5" Foreground="Gray"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="2" Background="#80000000" IsVisible="{Binding IsLoading}">
+            <TextBlock Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="20"/>
+        </Border>
+    </Grid>
+</Window>
